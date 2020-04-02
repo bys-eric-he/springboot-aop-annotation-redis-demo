@@ -100,7 +100,7 @@ public class QueryCacheAspect {
         //缓存中没有数据，调用原始方法查询数据库
         Object object = pjp.proceed();
         //设置超时时间30分钟
-        redisUtil.set(key, object, RedisConstants.DataBase1.getValue(), 30);
+        redisUtil.set(key, object, RedisConstants.DataBase1.getValue(), 5);
 
         log.info("DB取到数据并存入缓存 >>>> " + object.toString());
         log.info("AOP 缓存切面处理 >>>> end 耗时：" + (System.currentTimeMillis() - beginTime));

@@ -22,6 +22,13 @@ public interface UserService {
     void delUserById(Long id);
 
     /**
+     * 更新用户
+     *
+     * @param userDTO
+     */
+    void updateUser(UserDTO userDTO);
+
+    /**
      * 获取用户所有E-mail地址
      *
      * @return

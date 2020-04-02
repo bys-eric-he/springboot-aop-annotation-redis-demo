@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  * 具备分库功能，可以根据需要向不同的库中存储数据。
  */
 @Lazy
-@Component
 public class RedisUtil {
 
     private EnhanceRedisTemplate enhanceRedisTemplate;
@@ -35,7 +34,7 @@ public class RedisUtil {
     public boolean expire(String key, long time) {
         try {
             if (time > 0) {
-                enhanceRedisTemplate.expire(key, time, TimeUnit.SECONDS);
+                enhanceRedisTemplate.expire(key, time, TimeUnit.MINUTES);
             }
             return true;
         } catch (Exception e) {
@@ -51,7 +50,7 @@ public class RedisUtil {
      * @return 时间(秒) 返回0代表为永久有效
      */
     public long getExpire(String key) {
-        return enhanceRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+        return enhanceRedisTemplate.getExpire(key, TimeUnit.MINUTES);
     }
 
     /**
@@ -83,6 +82,17 @@ public class RedisUtil {
                 enhanceRedisTemplate.delete(CollectionUtils.arrayToList(key));
             }
         }
+    }
+
+
+    /**
+     * 普通缓存获取
+     *
+     * @param key 键
+     * @return 值
+     */
+    public Object get(String key) {
+        return key == null ? null : enhanceRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -130,7 +140,7 @@ public class RedisUtil {
         try {
             enhanceRedisTemplate.indexdb.set(indexdb);
             if (time > 0) {
-                enhanceRedisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+                enhanceRedisTemplate.opsForValue().set(key, value, time, TimeUnit.MINUTES);
             } else {
                 enhanceRedisTemplate.opsForValue().set(key, value);
             }
@@ -153,7 +163,7 @@ public class RedisUtil {
     public boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
-                enhanceRedisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+                enhanceRedisTemplate.opsForValue().set(key, value, time, TimeUnit.MINUTES);
             } else {
                 enhanceRedisTemplate.opsForValue().set(key, value);
             }

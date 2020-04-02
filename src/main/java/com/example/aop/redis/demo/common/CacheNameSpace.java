@@ -7,5 +7,9 @@ public enum CacheNameSpace {
     /**
      * 用户缓存
      */
-    USER
+    USER,
+    /**
+     * 部门缓存
+     */
+    DEPARTMENT
 }

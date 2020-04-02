@@ -2,6 +2,7 @@ package com.example.aop.redis.demo.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@ToString
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = -2424399419173607903L;

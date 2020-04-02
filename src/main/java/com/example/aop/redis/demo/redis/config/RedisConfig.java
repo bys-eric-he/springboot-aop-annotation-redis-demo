@@ -56,6 +56,7 @@ public class RedisConfig {
         redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
         JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
         jedisClientConfiguration.connectTimeout(Duration.ofMillis(timeout));
+
         return new JedisConnectionFactory(redisStandaloneConfiguration,
                 jedisClientConfiguration.build());
     }
@@ -69,7 +70,7 @@ public class RedisConfig {
      */
     @Bean
     public EnhanceRedisTemplate functionDomainRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        log.info("RedisTemplate实例化成功！");
+        log.info("-->EnhanceRedisTemplate实例化成功！");
         EnhanceRedisTemplate redisTemplate = new EnhanceRedisTemplate();
         initDomainRedisTemplate(redisTemplate, redisConnectionFactory);
         return redisTemplate;
@@ -84,6 +85,7 @@ public class RedisConfig {
      */
     @Bean
     public RedisSerializer fastJson2JsonRedisSerializer() {
+        log.info("-->FastJson2JsonRedisSerializer实例化成功！");
         return new FastJson2JsonRedisSerializer<Object>(Object.class);
     }
 
@@ -114,7 +116,7 @@ public class RedisConfig {
      */
     @Bean(name = "redisUtil")
     public RedisUtil redisUtil(EnhanceRedisTemplate redisTemplate) {
-        log.info("RedisUtil注入成功！");
+        log.info("-->RedisUtil注入成功！");
         RedisUtil redisUtil = new RedisUtil();
         redisUtil.setEnhanceRedisTemplate(redisTemplate);
         return redisUtil;

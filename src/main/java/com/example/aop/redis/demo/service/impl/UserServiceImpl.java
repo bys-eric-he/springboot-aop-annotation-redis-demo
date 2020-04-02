@@ -1,5 +1,6 @@
 package com.example.aop.redis.demo.service.impl;
 
+import com.example.aop.redis.demo.annotation.ClearCacheKey;
 import com.example.aop.redis.demo.annotation.QueryCache;
 import com.example.aop.redis.demo.annotation.QueryCacheKey;
 import com.example.aop.redis.demo.common.CacheNameSpace;
@@ -14,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +56,31 @@ public class UserServiceImpl implements UserService {
     public void delUserById(Long id) {
         userRepository.deleteById(id);
         log.info(String.format("----->用户id:{%s}的用户已经删除!<------", id));
+    }
+
+    /**
+     * 更新用户
+     *
+     * @param userDTO
+     */
+    @Override
+    @QueryCache(nameSpace = CacheNameSpace.USER)
+    public void updateUser(@ClearCacheKey(keyName = "userDTO") UserDTO userDTO) {
+        if (userDTO != null && userDTO.getId() != null) {
+            Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setAddress(userDTO.getAddress());
+                user.setEmail(userDTO.getEmail());
+                user.setMobile(userDTO.getMobile());
+                user.setName(userDTO.getName());
+                user.setLastUpdateDate(LocalDateTime.now());
+
+                userRepository.save(user);
+
+                log.info(String.format("----->用户id:{%s}的用户已经更新!<------", userDTO.getId()));
+            }
+        }
     }
 
     /**

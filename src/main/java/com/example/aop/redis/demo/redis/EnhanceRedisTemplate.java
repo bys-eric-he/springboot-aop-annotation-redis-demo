@@ -23,6 +23,13 @@ public class EnhanceRedisTemplate extends RedisTemplate {
         }
     };
 
+    /**
+     * 重写RedisConnection方法,设置Redis库的编号
+     *
+     * @param connection
+     * @param existingConnection
+     * @return
+     */
     @Override
     protected RedisConnection preProcessConnection(RedisConnection connection, boolean existingConnection) {
         try {
@@ -30,7 +37,7 @@ public class EnhanceRedisTemplate extends RedisTemplate {
             //如果设置了dbIndex
             if (dbIndex != null) {
                 if (connection instanceof JedisConnection) {
-                    if (((JedisConnection) connection).getNativeConnection().getDB().intValue() != dbIndex) {
+                    if (((JedisConnection) connection).getNativeConnection().getDB() != dbIndex) {
                         connection.select(dbIndex);
                     }
                 } else {

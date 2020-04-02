@@ -2,25 +2,35 @@ package com.example.aop.redis.demo.redis;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 序列化操作类，帮助我们完成redis值的序列化，现RedisSerializer接口，实现其中的序列化和反序列化方法。
  *
  * @ClassName: FastJson2JsonRedisSerializer
  * @Auther: eric
- * @Date: 2018/8/28 16:11
+ * @Date: 04/02/2020
  * @Description: 自定义序列化
  */
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private Class<T> clazz;
+
+    /**
+     * 使用Redis 配置替换fastjson 反序列化报错 com.alibaba.fastjson.JSONException: autoType is not support
+     * 添加autotype白名单
+     */
+    static {
+        ParserConfig.getGlobalInstance().addAccept("com.example.aop.redis.demo.dto");
+    }
 
     public FastJson2JsonRedisSerializer(Class<T> clazz) {
         super();
