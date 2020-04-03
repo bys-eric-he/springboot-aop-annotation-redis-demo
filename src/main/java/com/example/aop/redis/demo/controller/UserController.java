@@ -31,8 +31,8 @@ public class UserController {
 
     @DeleteMapping("/user/delete/{id}")
     @ApiOperation(value = "根据ID删除用户", httpMethod = "DELETE")
-    public void delUserById(@PathVariable Long id) {
-        userService.delUserById(id);
+    public void deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
     }
 
     @PutMapping("/user/update")

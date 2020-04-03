@@ -3,16 +3,16 @@ package com.example.aop.redis.demo.annotation;
 import java.lang.annotation.*;
 
 /**
- * 注解 ClearCacheKey 是方法级别的注解
+ * 参数注解,用于指定要获取的参数字段。
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
 @Documented
-public @interface ClearCacheKey {
+public @interface ParameterCacheKey {
     /**
-     * 缓存键名称注解，默认值为类名称
+     * 参数字段
      *
      * @return
      */
-    String keyName() default "ClearCacheKey";
+    String fieldName() default "";
 }

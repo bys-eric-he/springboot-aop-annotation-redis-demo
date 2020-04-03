@@ -1,8 +1,7 @@
 package com.example.aop.redis.demo.service.impl;
 
-import com.example.aop.redis.demo.annotation.ClearCacheKey;
-import com.example.aop.redis.demo.annotation.QueryCache;
-import com.example.aop.redis.demo.annotation.QueryCacheKey;
+import com.example.aop.redis.demo.annotation.AOPCacheKey;
+import com.example.aop.redis.demo.annotation.ParameterCacheKey;
 import com.example.aop.redis.demo.common.CacheNameSpace;
 import com.example.aop.redis.demo.convert.UserConvert;
 import com.example.aop.redis.demo.dto.UserDTO;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @QueryCache(nameSpace = CacheNameSpace.USER)
-    public UserDTO findUserById(@QueryCacheKey(keyName = "userDTO") Long id) {
+    @AOPCacheKey(nameSpace = CacheNameSpace.USER, key = "UserDTO", expireTime = 1, timeUnit = TimeUnit.HOURS)
+    public UserDTO findUserById(@ParameterCacheKey(fieldName = "id") Long id) {
         User user = userRepository.getOne(id);
         return userConvert.convertToDto(user);
     }
@@ -53,7 +53,8 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     @Override
-    public void delUserById(Long id) {
+    @AOPCacheKey(nameSpace = CacheNameSpace.USER, key = "UserDTO")
+    public void deleteUserById(@ParameterCacheKey(fieldName = "id") Long id) {
         userRepository.deleteById(id);
         log.info(String.format("----->用户id:{%s}的用户已经删除!<------", id));
     }
@@ -64,8 +65,8 @@ public class UserServiceImpl implements UserService {
      * @param userDTO
      */
     @Override
-    @QueryCache(nameSpace = CacheNameSpace.USER)
-    public void updateUser(@ClearCacheKey(keyName = "userDTO") UserDTO userDTO) {
+    @AOPCacheKey(nameSpace = CacheNameSpace.USER, key = "UserDTO")
+    public void updateUser(@ParameterCacheKey(fieldName = "id") UserDTO userDTO) {
         if (userDTO != null && userDTO.getId() != null) {
             Optional<User> optionalUser = userRepository.findById(userDTO.getId());
             if (optionalUser.isPresent()) {
@@ -89,6 +90,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @AOPCacheKey(nameSpace = CacheNameSpace.USER, key = "UserDTO_Emails", expireTime = 300, timeUnit = TimeUnit.SECONDS)
     public List<String> userEmails() {
         QUser user = QUser.user;
         return jpaQueryFactory.selectFrom(user)
@@ -102,6 +104,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @AOPCacheKey(nameSpace = CacheNameSpace.USER, key = "UserDTO_NamesAndEmails", expireTime = 300, timeUnit = TimeUnit.SECONDS)
     public List<Map<String, String>> userNamesEmails() {
         QUser user = QUser.user;
         return jpaQueryFactory.selectFrom(user)

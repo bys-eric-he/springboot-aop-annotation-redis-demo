@@ -19,7 +19,7 @@ public interface UserService {
      *
      * @param id
      */
-    void delUserById(Long id);
+    void deleteUserById(Long id);
 
     /**
      * 更新用户
